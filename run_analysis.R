@@ -25,8 +25,8 @@ stuff3 <- rbind(train_subject,test_subject)
 
 
 ActivityNames <- c("WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS","SITTING","STANDING","LAYING")
-# There must be a more elegant way of assigning meaniful actifity rownames than this, but at
-# least it works.
+# There must be a more elegant way of assigning meaniful actifity rownames than one row at a time, but at
+# least it works. 
 stuff1 <- (gsub("1","WALKING", stuff1[,1] ))
 namesAsStrings     <- data.frame(stuff1)
 namesAsStrings[,1] <- gsub("2","WALKING_UPSTAIRS", namesAsStrings[,1] )
