@@ -1,20 +1,26 @@
 ##Project Description
 The researchers write:
 >"In this paper, we present a system for human physical Activity Recognition (AR) using smartphone inertial sensors. As these mobile phones are limited in terms of energy and computing power, we propose a novel hardware-friendly approach for multiclass classification. This method adapts the standard Support Vector Machine (SVM) and exploits fixed-point arithmetic for computational cost reduction. A comparison with the traditional SVM shows a significant improvement in terms of computational costs while maintaining similar accuracy, which can contribute to develop more sustainable systems for AmI."[1]
+
 ##Study Design and Data Processing
 It should be noted that "raw data" is a relative term. To me, "raw data" is data exactly as I received it from the research team. But the data presented to me for further processing has already been processed by the research team from the original measurements. They have also provided 
 * files ontaining the unprocessed sensor data
 * descriptions of their processing of the data.
+
 Some of their characteriztions of their data (e.g. what is a "Jerk" signal) is incomprehenible without accesss to the full reasearch paper (refernced above). I at least am not prepared to pay Springer $30 to obtain a copy.
-###Raw Data
-####Truly Raw Data
-"The experiments have been carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone (Samsung Galaxy S II) on the waist. Using its embedded accelerometer and gyroscope, we captured 3-axial linear acceleration and 3-axial angular velocity at a constant rate of 50Hz. The experiments have been video-recorded to label the data manually. The obtained dataset has been randomly partitioned into two sets, where 70% of the volunteers was selected for generating the training data and 30% the test data."[1]
+
+##Raw Data
+
+###Truly Raw Data
+>"The experiments have been carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone (Samsung Galaxy S II) on the waist. Using its embedded accelerometer and gyroscope, we captured 3-axial linear acceleration and 3-axial angular velocity at a constant rate of 50Hz. The experiments have been video-recorded to label the data manually. The obtained dataset has been randomly partitioned into two sets, where 70% of the volunteers was selected for generating the training data and 30% the test data."[1]
+
 I have examined the training and test data sets of subject IDs and verirified the 70:30 breakdown.
 print(unique(test_subject[,1]))
-[1]  2  4  9 10 12 13 18 20 24
-> print(unique(train_subject[,1]))
- [1]  1  3  5  6  7  8 11 14 15 16 17 19 21 22 23 25 26 27 28 29 30
-####My "Raw Data"
+[1]  2  4  9 10 12 13 18 20 24 
+print(unique(train_subject[,1]))
+[1]  1  3  5  6  7  8 11 14 15 16 17 19 21 22 23 25 26 27 28 29 30
+
+###My "Raw Data"
 >"The sensor signals (accelerometer and gyroscope) were pre-processed by applying noise filters and then sampled in fixed-width sliding windows of 2.56 sec and 50% overlap (128 readings/window). The sensor acceleration signal, which has gravitational and body motion components, was separated using a Butterworth low-pass filter into body acceleration and gravity. The gravitational force is assumed to have only low frequency components, therefore a filter with 0.3 Hz cutoff frequency was used."
 This is the "rawest" data available in their data distribution. 
 "From each window, a vector of features was obtained by calculating variables from the time and frequency domain".
