@@ -1,4 +1,8 @@
 ##Project Description
+Our project consists of taking data sets provided by the research team and tidying that data for further processing. We are to to take their data and output two new tidy data sets which extract only those variables which are the means or standard deviations of the measurements and summarize that data by (1) Activity and (2) Subject 
+
+Their data is publicly available at made available at: https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip. As described below, this is not raw data in an absolute sense; it has been extensively processed by the research team. 
+
 The researchers write:
 >"In this paper, we present a system for human physical Activity Recognition (AR) using smartphone inertial sensors. As these mobile phones are limited in terms of energy and computing power, we propose a novel hardware-friendly approach for multiclass classification. This method adapts the standard Support Vector Machine (SVM) and exploits fixed-point arithmetic for computational cost reduction. A comparison with the traditional SVM shows a significant improvement in terms of computational costs while maintaining similar accuracy, which can contribute to develop more sustainable systems for AmI."[1]
 
@@ -12,7 +16,7 @@ Some of their characteriztions of their data (e.g. what is a "Jerk" signal) is i
 ##Raw Data
 
 ###Truly Raw Data
->"The experiments have been carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone (Samsung Galaxy S II) on the waist. Using its embedded accelerometer and gyroscope, we captured 3-axial linear acceleration and 3-axial angular velocity at a constant rate of 50Hz. The experiments have been video-recorded to label the data manually. The obtained dataset has been randomly partitioned into two sets, where 70% of the volunteers was selected for generating the training data and 30% the test data."[1]
+>"The experiments have been carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone (Samsung Galaxy S II) on the waist. Using its embedded accelerometer and gyroscope, we captured 3-axial linear acceleration and 3-axial angular velocity at a constant rate of 50Hz. The experiments have been video-recorded to label the data manually. The obtained dataset has been randomly partitioned into two sets, where 70% of the volunteers was selected for generating the training data and 30% the test data."[1]  This describes the absolute raw data which is *not* included in their data distribution.
 
 I have examined the training and test data sets of subject IDs and verirified the 70:30 breakdown.
 print(unique(test_subject[,1]))
@@ -22,9 +26,70 @@ print(unique(train_subject[,1]))
 
 ###My "Raw Data"
 >"The sensor signals (accelerometer and gyroscope) were pre-processed by applying noise filters and then sampled in fixed-width sliding windows of 2.56 sec and 50% overlap (128 readings/window). The sensor acceleration signal, which has gravitational and body motion components, was separated using a Butterworth low-pass filter into body acceleration and gravity. The gravitational force is assumed to have only low frequency components, therefore a filter with 0.3 Hz cutoff frequency was used."
-This is the "rawest" data available in their data distribution. 
-"From each window, a vector of features was obtained by calculating variables from the time and frequency domain".
+This is the "rawest" data available in their data distribution, i.e. sensor measurements which have noise reduced and sampled. 
+"In this project we are concerned with data which has been further processed by the research team. 
 
+"Subsequently, the body linear acceleration and angular velocity were derived in time to obtain Jerk signals (tBodyAccJerk-XYZ and tBodyGyroJerk-XYZ). Also the magnitude of these three-dimensional signals were calculated using the Euclidean norm (tBodyAccMag, tGravityAccMag, tBodyAccJerkMag, tBodyGyroMag, tBodyGyroJerkMag). 
+
+Finally a Fast Fourier Transform (FFT) was applied to some of these signals producing fBodyAcc-XYZ, fBodyAccJerk-XYZ, fBodyGyro-XYZ, fBodyAccJerkMag, fBodyGyroMag, fBodyGyroJerkMag. (Note the 'f' to indicate frequency domain signals). 
+
+These signals were used to estimate variables of the feature vector for each pattern:  
+'-XYZ' is used to denote 3-axial signals in the X, Y and Z directions.
+
+tBodyAcc-XYZ
+tGravityAcc-XYZ
+tBodyAccJerk-XYZ
+tBodyGyro-XYZ
+tBodyGyroJerk-XYZa
+tBodyAccMag
+tGravityAccMag
+tBodyAccJerkMag
+tBodyGyroMag
+tBodyGyroJerkMag
+fBodyAcc-XYZ
+fBodyAccJerk-XYZ
+fBodyGyro-XYZ
+fBodyAccMag
+fBodyAccJerkMag
+fBodyGyroMag
+fBodyGyroJerkMag
+
+All time domain (t) Acc quantities are in units of standard gravity g and have dimension length/s^2. 
+All time domain (t) Gyro quantities are in units of radians/s
+All frequency domain (t) Acc quantities are in units of standard gravity g and have dimension length/s^2. 
+All frequency domain (t) Gyro quantities are in units of radians/s
+
+The set of variables that were estimated from these signals are: 
+
+|Derived variable| Units|
+|-------------------------- | ------------------------------------|
+|mean(): Mean value|Same as quantity for the original variable |
+|std(): Standard deviation | Same as quantity for the original variable |
+|mad(): Median absolute deviation | Same as quantity for the original variable| 
+|max(): Largest value in array |Same as quantity for the original variable |
+min(): Smallest value in array |Same as quantity for the original variable 
+sma(): Signal magnitude area| Need more information
+energy(): Energy measure. | Need more information
+iqr(): Interquartile range  | Same as quantity for the original variable
+entropy(): Signal entropy | Need more information
+arCoeff(): Autorregresion coefficients with Burg order equal to 4 | Dimensionless
+correlation(): correlation coefficient between two signal |Dimensionless
+maxInds(): index of the frequency component with largest magnitude | Dimensionless
+meanFreq(): Weighted average of the frequency components to obtain a mean frequency| 1/s
+skewness(): skewness of the frequency domain signal | Dimensionless
+kurtosis(): kurtosis of the frequency domain signal |Dimensionless
+bandsEnergy(): Energy of a frequency interval within the 64 bins of the FFT of each window.| Need more information 
+angle(): Angle between two vectors.| radians
+
+Additional vectors obtained by averaging the signals in a signal window sample. These are used on the angle() variable:
+
+-gravityMean
+-tBodyAccMean
+-tBodyAccJerkMean
+-tBodyGyroMean
+-tBodyGyroJerkMean
+
+This encoding was used by the research team and maintened here in the ordered list of variable names below.
 ###Variable Names 
 There are no column headers in the original data files.  These are the variables in the 561 columns of x_train/test.txt.
 
@@ -590,8 +655,38 @@ There are no column headers in the original data files.  These are the variables
 560. angle(Y,gravityMean)
 561. angle(Z,gravityMean)
 
+##Creating Tidy Datafiles
+###Input files
+- 'train/X_train.txt': Training set. Each row is a 561 element vector of derived quantities as descibed above for a single activity performed by a singled subject.  All elements are doubles and quantities have been normalized so they have no units. N_train rows x 561 col
+- 'test/X_test.txt': Test set.  N_test rows x 561 col
+
+- 'train/y_train.txt': Training labels. Six integers identifying the six activities. N_train rows x 1 col
+- 'test/y_test.txt': Test labels. N_test rows x 1 col
+
+- 'train/subject_train.txt': Each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30.  N_train rows x 1 col
+_ 'test/subject_test.txt  N_test rows x 1 col
+
+- 'activity_labels.txt': Links the "y" labels with their activity name
+###Steps
+1. Download the data distribution
+2. Examine each input file 
+2. Read each file into a data frame
+3. Concatenate test data frame with training data frame for each file type.
+4. Replace integer activity lables with activity names
+5. Replace V1 etc. in each data frame with meaningful column names
+6. Merge vector data frame separately with activity and subject data data frames.
+The two resulting data frames form a tidy data set.
+
+##Variables Used in Present Analysis
+Each data frame described above was subsetted to include only those variables of the form xxx-mean() and xxx-std().
+##Analysis
+Data frames were grouped by "Activity" or "Subject" as appropriate, then summarized by mean(). The outputs are in the files
+"mean_by_Activity.txt" and "mean_by_Subject".
+
 ##Citations
-Citations [2] and [3] were used liberally in the formatting and organization of this document.
 [1] Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ortiz. Human Activity Recognition on Smartphones using a Multiclass Hardware-Friendly Support Vector Machine. International Workshop of Ambient Assisted Living (IWAAL 2012). Vitoria-Gasteiz, Spain. Dec 2012
-[2] Codebook template
-[3]
+
+[2] https://gist.github.com/JorisSchut/dbc1fc0402f28cad9b41
+
+[3]https://thoughtfulbloke.wordpress.com/2015/09/09/getting-and-cleaning-the-assignment/
+
